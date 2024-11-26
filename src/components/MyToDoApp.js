@@ -33,11 +33,11 @@ const ToDoApp = () => {
 
   const fetchTodos = async () => {
     try {
-      const response = await fetch('http://localhost:5201/api/ToDo');
+      const response = await fetch('http://localhost:5147/api/TodoApplication');
       console.log(response);
 
       if (!response.ok) {
-
+       
 
         console.log();
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -45,6 +45,7 @@ const ToDoApp = () => {
 
       }
       const data = await response.json();
+      // toast.success("Success Data Fetch");
       setTodos(data);
     } catch (error) {
       console.error('Error fetching todo items:', error);
@@ -54,7 +55,9 @@ const ToDoApp = () => {
 
   const handleSearch = async () => {
     try {
-      const response = await fetch(`http://localhost:5201/api/ToDo/search?query=${query}`);
+
+    
+      const response = await fetch(`http://localhost:5147/api/TodoApplication/search?keyword=${query}`);
 
       console.log(response);
       if (!response.ok) {
@@ -63,6 +66,7 @@ const ToDoApp = () => {
 
       }
       const data = await response.json();
+      toast.success("Success Data Search");
       setTodos(data);
     } catch (error) {
       console.error('Error fetching todo items:', error);
@@ -75,15 +79,15 @@ const ToDoApp = () => {
     const currentDate = new Date().toISOString().split('T')[0];
 
 
-    const newTodo = { title, description, priority, category: todoCategory, createdDate: currentDate };
-    const newTodo1 = { id, title, description, priority, category: todoCategory, createdDate: currentDate };
+    const newTodo = { title, description, priority, category: todoCategory, createdAt: currentDate };
+    const newTodo1 = { id, title, description, priority, category: todoCategory, createdAt: currentDate };
 
 
     if (currentTodo) {
       // Update existing todo
       console.log("Updated Data");
       try {
-        const response = await fetch(`http://localhost:5201/api/ToDo/${currentTodo.id}`, {
+        const response = await fetch(`http://localhost:5147/api/TodoApplication/${currentTodo.id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -112,7 +116,7 @@ const ToDoApp = () => {
       try {
 
         console.log("Added Data");
-        const response = await fetch('http://localhost:5201/api/ToDo', {
+        const response = await fetch('http://localhost:5147/api/TodoApplication', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -131,7 +135,7 @@ const ToDoApp = () => {
 
         setTimeout(() => {
           fetchTodos();
-        }, 2000);
+        }, 1000);
       } catch (error) {
         console.error('Error adding todo item:', error);
       }
@@ -144,7 +148,7 @@ const ToDoApp = () => {
   const handleDelete = async (id) => {
     try {
       if (window.confirm("Are You sure to delete this toast") == true) {
-        const response = await fetch(`http://localhost:5201/api/ToDo/${id}`, {
+        const response = await fetch(`http://localhost:5147/api/TodoApplication/${id}`, {
           method: 'DELETE',
         });
 
@@ -261,7 +265,7 @@ const ToDoApp = () => {
             <p className=" text-xl text-center">Description : {todo.description}</p>
             <p className=" text-xl text-center">Priority: {todo.priority}</p>
             <p className=" text-xl text-center">Category: {todo.category}</p>
-            <p className=" text-xl text-start">Created Date: {new Date(todo.createdDate).toLocaleDateString()}</p>
+            <p className=" text-xl text-start">Created Date: {new Date(todo.createdAt).toLocaleDateString()}</p>
             <div className="flex space-x-96 mt-8">
               <button
                 className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
